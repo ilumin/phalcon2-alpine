@@ -1,31 +1,35 @@
-FROM alpine:edge
+FROM alpine
 
 MAINTAINER Teerasak Vichadee <iolumin@gmail.com>
 
-# Install dependencies
+# Install PHP Dependencies
+# from main and common repo
 RUN \
   apk add --no-cache \
+  php-fpm php-json php-zlib php-xml php-pdo php-phar php-openssl \
+  php-pdo_mysql php-mysqli php-gd php-iconv php-mcrypt \
+  php-mysql php-curl php-opcache php-ctype php-apcu \
+  php-intl php-bcmath php-dom php-xmlreader
 
-    # PHP Library
-    php-fpm php-json php-zlib php-xml php-pdo php-phar php-openssl \
-    php-pdo_mysql php-mysqli \
-    php-gd php-iconv php-mcrypt \
-    php-mysql php-curl php-opcache php-ctype php-apcu \
-    php-intl php-bcmath php-dom php-xmlreader \
+# Install redis
+# from testing repo
+RUN \
+  apk add --no-cache --repository http://nl.alpinelinux.org/alpine/edge/testing \
+  php-redis
 
-    # Phalcon framework
-    php-phalcon \
+# Install Phalcon framework
+RUN \
+  apk add --no-cache \
+  php-phalcon
 
-    # MySQL -- I think I will create another container for DB Server
-    # mysql-client \
+# Install NgniX and Tools
+RUN \
+  apk add --no-cache \
+  nginx ca-certificates
 
-    # NgniX and Tools
-    nginx ca-certificates \
-
-  # Clear apk temp
-  && rm -rf /var/cache/apk/* \
-
-  # Prepare folder
+# Clear temp and prepare dir
+RUN \
+  rm -rf /var/cache/apk/* \
   && mkdir /app
 
 # Update config
